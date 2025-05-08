@@ -82,5 +82,5 @@ REACT_APP_AWS_ACCESS_KEY_ID=YOUR_KEY_ID
 REACT_APP_AWS_SECRET_ACCESS_KEY=YOUR_SECRET_KEY
 Restart the dev server after saving the file.
 
-![alt text](image.png)
-![alt text](image-1.png)
+![DynamoDB Table Example](docs/image.png)
+![DynamoDB Table Example](docs/image-1.png)
