@@ -3,6 +3,8 @@ import {
   DynamoDBDocumentClient,
   ScanCommand,
   PutCommand,
+  UpdateCommand,
+  DeleteCommand,
 } from "@aws-sdk/lib-dynamodb";
 
 // Configure DynamoDBClient with region & credentials from environment variables
@@ -32,4 +34,39 @@ export async function createTodo(item) {
   });
   await ddbDocClient.send(command);
   return item;
+}
+
+// Update fields on a single item
+export async function updateTodo(id, updates) {
+  const updateExpression = [];
+  const expressionAttributeNames = {};
+  const expressionAttributeValues = {};
+
+  for (const [key, value] of Object.entries(updates)) {
+    updateExpression.push(`#${key} = :${key}`);
+    expressionAttributeNames[`#${key}`] = key;
+    expressionAttributeValues[`:${key}`] = value;
+  }
+
+  const command = new UpdateCommand({
+    TableName: "Todo",
+    Key: { id },
+    UpdateExpression: `SET ${updateExpression.join(", ")}`,
+    ExpressionAttributeNames: expressionAttributeNames,
+    ExpressionAttributeValues: expressionAttributeValues,
+    ReturnValues: "ALL_NEW",
+  });
+
+  const result = await ddbDocClient.send(command);
+  return result.Attributes;
+}
+
+// Delete an item from the "Todo" table
+export async function deleteTodo(id) {
+  const command = new DeleteCommand({
+    TableName: "Todo",
+    Key: { id },
+  });
+
+  await ddbDocClient.send(command);
 }

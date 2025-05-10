@@ -84,3 +84,5 @@ Restart the dev server after saving the file.
 
 ![DynamoDB Table Example](docs/image.png)
 ![DynamoDB Table Example](docs/image-1.png)
+![DynamoDB Table Example](docs/image-copy.png)
+![DynamoDB Table Example](docs/image2-copy.png)

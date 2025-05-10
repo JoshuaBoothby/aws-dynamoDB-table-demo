@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
-import { scanTodos, createTodo } from "./dynamo";
+import { scanTodos, createTodo, updateTodo, deleteTodo } from "./dynamo";
 
 export default function App() {
   const [todos, setTodos] = useState([]);
@@ -27,6 +27,18 @@ export default function App() {
     setInput("");
   };
 
+  const handleToggleComplete = async (id, currentCompleted) => {
+    const updatedTodo = await updateTodo(id, { completed: !currentCompleted });
+    setTodos((prev) =>
+      prev.map((todo) => (todo.id === id ? { ...todo, ...updatedTodo } : todo))
+    );
+  };
+
+  const handleDelete = async (id) => {
+    await deleteTodo(id);
+    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+  };
+
   return (
     <>
       <Header />
@@ -36,7 +48,13 @@ export default function App() {
           <ul>
             {todos.map((todo) => (
               <li key={todo.id}>
+                <input
+                  type="checkbox"
+                  checked={todo.completed}
+                  onChange={() => handleToggleComplete(todo.id, todo.completed)}
+                />
                 {todo.text} {todo.completed ? "(done)" : ""}
+                <button onClick={() => handleDelete(todo.id)}>×</button>
               </li>
             ))}
           </ul>
